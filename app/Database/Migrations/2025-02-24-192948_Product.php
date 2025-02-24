@@ -15,6 +15,11 @@ class Product extends Migration
                 'unsigned'       => true,
                 'auto_increment' => true,
             ],
+            'client_id_creator' => [
+                'type'       => 'INT',
+                'constraint' => 5,
+                'unsigned'   => true,
+            ],
             'price' => [
                 'type'       => 'DECIMAL',
                 'constraint' => '10,2',
@@ -37,11 +42,12 @@ class Product extends Migration
             ],
         ]);
         $this->forge->addPrimaryKey('id');
-        $this->forge->createTable('product');
+        $this->forge->addForeignKey('client_id_creator', 'clients', 'id', 'CASCADE', 'CASCADE');
+        $this->forge->createTable('products');
     }
 
     public function down()
     {
-        $this->forge->dropTable('product');
+        $this->forge->dropTable('products');
     }
 }

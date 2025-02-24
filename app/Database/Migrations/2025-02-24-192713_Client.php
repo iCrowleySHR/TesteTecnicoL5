@@ -33,11 +33,11 @@ class Client extends Migration
             ],
         ]);
         $this->forge->addPrimaryKey('id');
-        $this->forge->createTable('client');
+        $this->forge->createTable('clients');
     }
 
     public function down()
     {
-        $this->forge->dropTable('client');
+        $this->forge->dropTable('clients');
     }
 }

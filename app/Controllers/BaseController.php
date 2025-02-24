@@ -8,6 +8,8 @@ use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
+use CodeIgniter\RESTful\ResourceController;
+
 
 /**
  * Class BaseController
@@ -19,7 +21,7 @@ use Psr\Log\LoggerInterface;
  *
  * For security be sure to declare any new methods as protected or private.
  */
-abstract class BaseController extends Controller
+abstract class BaseController extends ResourceController
 {
     /**
      * Instance of the main Request object.
@@ -54,5 +56,43 @@ abstract class BaseController extends Controller
         // Preload any models, libraries, etc, here.
 
         // E.g.: $this->session = service('session');
+    }
+
+    protected function respondWithFormat($data, $status = 200, $message = "Dados retornados com sucesso")
+    {
+        return $this->respond([
+            'cabecalho' => [
+                'status' => $status,
+                'mensagem' => $message,
+            ],
+            'retorno' => $data,
+        ], $status);
+    }
+    protected function validateCpf($cpf)
+    {
+        $cpf = preg_replace('/\D/', '', $cpf);
+    
+        if (strlen($cpf) !== 11) {
+            return false;
+        }
+        if (preg_match('/^(\d)\1{10}$/', $cpf)) {
+            return false;
+        }
+
+        $soma = 0;
+        for ($i = 0; $i < 9; $i++) {
+            $soma += $cpf[$i] * (10 - $i);
+        }
+        $resto = $soma % 11;
+        $digito1 = $resto < 2 ? 0 : 11 - $resto;
+
+        $soma = 0;
+        for ($i = 0; $i < 10; $i++) {
+            $soma += $cpf[$i] * (11 - $i);
+        }
+        $resto = $soma % 11;
+        $digito2 = $resto < 2 ? 0 : 11 - $resto;
+
+        return $cpf[9] == $digito1 && $cpf[10] == $digito2;
     }
 }
