@@ -5,5 +5,13 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
-$routes->post('/client', 'Client::create');
-$routes->post('/client/auth', 'Client::index');
+
+$routes->group('client', [], function($routes) {
+    $routes->post('create', 'Client::create');
+    $routes->post('auth', 'Client::auth');
+    
+    $routes->group('', ['filter' => 'jwt'], function($routes) {
+        $routes->get('show', 'Client::show');
+    });
+});
+

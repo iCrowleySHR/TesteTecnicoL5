@@ -9,16 +9,20 @@ class Client extends BaseController
 {
     protected $modelName = 'App\Models\ClientModel';
     protected $format    = 'json';
+    private $jwtAuth;
+
+    public function __construct()
+    {
+        $this->jwtAuth = new JWTAuth();
+    }
 
     /**
      * Return an array of resource objects, themselves in array format.
      *
      * @return ResponseInterface
      */
-    public function index()
+    public function auth()
     {
-        $jwtAuth = new JWTAuth();
-
         $data = $this->request->getJSON(true);
         $client = $this->model->where('cpf', $data['cpf'])->first();
         
@@ -26,7 +30,7 @@ class Client extends BaseController
             return $this->respondWithFormat($this->model->errors(), 400, "Erro ao autenticar cliente.");
         }
 
-        $token = $jwtAuth::generateToken($client);
+        $token = $this->jwtAuth->generateToken($client);
 
         return $this->respondWithFormat(["token" => $token], 201, "Cliente autenticado com sucesso.");
     }
@@ -40,7 +44,8 @@ class Client extends BaseController
      */
     public function show($id = null)
     {
-        //
+        $decoded = $this->request->decodedToken;
+        return $this->respondWithFormat($decoded, 200, "Dados do cliente retornados com sucesso.");
     }
 
     /**

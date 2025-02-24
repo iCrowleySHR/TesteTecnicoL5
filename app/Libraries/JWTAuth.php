@@ -7,30 +7,35 @@ use Firebase\JWT\Key;
 
 class JWTAuth
 {
-    private static $key;
+    private $key;
 
     public function __construct()
     {
-        self::$key = getenv('JWT_SECRET_KEY');
+        $this->key = getenv('JWT_SECRET_KEY');
     }
 
-    public static function generateToken($data)
+    public function generateToken($data)
     {
         $data['exp'] = time() + (365 * 24 * 60 * 60); // 1 year duration
-        return JWT::encode($data, self::$key, 'HS256');
+        return JWT::encode($data, $this->key, 'HS256');
     }
 
-    public static function validateToken($token)
+    public function validateToken($token)
     {
         try {
-            $decoded = JWT::decode($token, new Key(self::$key, 'HS256'));
+            $decoded = JWT::decode($token, new Key($this->key, 'HS256'));
             if ($decoded->exp < time()) {
+                log_message('error', 'Token expirado.');
                 return null; 
             }
             return $decoded;
-        } catch (\Exception $e) {
+        } catch (\UnexpectedValueException $e) {
             log_message('error', 'Token inválido: ' . $e->getMessage());
-            return null;
+        } catch (\DomainException $e) {
+            log_message('error', 'Erro de domínio: ' . $e->getMessage());
+        } catch (\Exception $e) {
+            log_message('error', 'Erro ao decodificar token: ' . $e->getMessage());
         }
+        return null;
     }
 }
