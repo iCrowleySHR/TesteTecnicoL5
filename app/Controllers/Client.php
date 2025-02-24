@@ -24,12 +24,13 @@ class Client extends BaseController
     public function auth()
     {
         $data = $this->request->getJSON(true);
-        $client = $this->model->where('cpf', $data['cpf'])->first();
+        $client = $this->model->where('email', $data['email'])->first();
         
-        if(!$client){
+        if(!$client || !password_verify($data['password'], $client['password'])){
             return $this->respondWithFormat($this->model->errors(), 400, "Erro ao autenticar cliente.");
         }
 
+        unset($client['password']);
         $token = $this->jwtAuth->generateToken($client);
 
         return $this->respondWithFormat(["token" => $token], 201, "Cliente autenticado com sucesso.");
@@ -66,6 +67,7 @@ class Client extends BaseController
     public function create()
     {
         $data = $this->request->getJSON(true);
+        $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
 
         if(!$this->validateCpf($data['cpf'])){
             return $this->respondWithFormat([], 400, "CPF inválido.");
@@ -74,7 +76,7 @@ class Client extends BaseController
         if (!$this->model->insert($data)) {
             return $this->respondWithFormat($this->model->errors(), 400, "Erro ao cadastrar cliente.");
         }
-    
+        
         return $this->respondWithFormat($data, 201, "Cliente cadastrado com sucesso.");
     }
     /**
