@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Libraries\JWTAuth;
 use CodeIgniter\HTTP\ResponseInterface;
 
 class Client extends BaseController
@@ -16,7 +17,18 @@ class Client extends BaseController
      */
     public function index()
     {
-        //
+        $jwtAuth = new JWTAuth();
+
+        $data = $this->request->getJSON(true);
+        $client = $this->model->where('cpf', $data['cpf'])->first();
+        
+        if(!$client){
+            return $this->respondWithFormat($this->model->errors(), 400, "Erro ao autenticar cliente.");
+        }
+
+        $token = $jwtAuth::generateToken($client);
+
+        return $this->respondWithFormat(["token" => $token], 201, "Cliente autenticado com sucesso.");
     }
 
     /**
