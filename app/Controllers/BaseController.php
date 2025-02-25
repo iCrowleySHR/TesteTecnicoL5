@@ -21,7 +21,7 @@ use CodeIgniter\RESTful\ResourceController;
  *
  * For security be sure to declare any new methods as protected or private.
  */
-abstract class BaseController extends ResourceController
+abstract class BaseController extends ResourceController 
 {
     /**
      * Instance of the main Request object.
@@ -94,5 +94,12 @@ abstract class BaseController extends ResourceController
         $digito2 = $resto < 2 ? 0 : 11 - $resto;
 
         return $cpf[9] == $digito1 && $cpf[10] == $digito2;
+    }
+
+    protected function verifyIfEmptyRequest($request)
+    {
+        $data = $request->getJSON(true);
+    
+        return empty($data) ? null : $data;
     }
 }

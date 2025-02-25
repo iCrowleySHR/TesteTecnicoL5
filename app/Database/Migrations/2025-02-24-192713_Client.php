@@ -22,11 +22,11 @@ class Client extends Migration
             'name' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 255,
-                'unique'     => true,
             ],
             'email' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 255,
+                'unique'     => true,
             ],
             'password' => [
                 'type'       => 'VARCHAR',

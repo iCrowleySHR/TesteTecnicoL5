@@ -12,6 +12,8 @@ $routes->group('client', [], function($routes) {
     
     $routes->group('', ['filter' => 'jwt'], function($routes) {
         $routes->get('show', 'Client::show');
+        $routes->delete('delete', 'Client::delete');
+        $routes->put('update', 'Client::update');
     });
 });
 

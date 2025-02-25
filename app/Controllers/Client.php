@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Libraries\JWTAuth;
+use App\Validation\ClientUpdateValidation;
 use CodeIgniter\HTTP\ResponseInterface;
 
 class Client extends BaseController
@@ -23,7 +24,11 @@ class Client extends BaseController
      */
     public function auth()
     {
-        $data = $this->request->getJSON(true);
+        $data = $this->verifyIfEmptyRequest($this->request);
+        if ($data === null) {
+            return $this->respondWithFormat([], 400, "Nenhum dado foi enviado.");
+        }
+
         $client = $this->model->where('email', $data['email'])->first();
         
         if(!$client || !password_verify($data['password'], $client['password'])){
@@ -50,23 +55,17 @@ class Client extends BaseController
     }
 
     /**
-     * Return a new resource object, with default properties.
-     *
-     * @return ResponseInterface
-     */
-    public function new()
-    {
-        //
-    }
-
-    /**
      * Create a new resource object, from "posted" parameters.
      *
      * @return ResponseInterface
      */
     public function create()
     {
-        $data = $this->request->getJSON(true);
+        $data = $this->verifyIfEmptyRequest($this->request);
+        if ($data === null) {
+            return $this->respondWithFormat([], 400, "Nenhum dado foi enviado.");
+        }
+
         $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
 
         if(!$this->validateCpf($data['cpf'])){
@@ -79,17 +78,6 @@ class Client extends BaseController
         
         return $this->respondWithFormat($data, 201, "Cliente cadastrado com sucesso.");
     }
-    /**
-     * Return the editable properties of a resource object.
-     *
-     * @param int|string|null $id
-     *
-     * @return ResponseInterface
-     */
-    public function edit($id = null)
-    {
-        //
-    }
 
     /**
      * Add or update a model resource, from "posted" properties.
@@ -100,9 +88,28 @@ class Client extends BaseController
      */
     public function update($id = null)
     {
-        //
-    }
+        $data = $this->verifyIfEmptyRequest($this->request);
+        if ($data === null) {
+            return $this->respondWithFormat([], 400, "Nenhum dado foi enviado.");
+        }
 
+        $decoded = $this->request->decodedToken;
+    
+        $validationResult = ClientUpdateValidation::validateUpdate($data);
+    
+        if (!empty($validationResult) && isset($validationResult['errors'])) {
+            return $this->respondWithFormat($validationResult['errors'], 400, "Erro ao atualizar cliente.");
+        }
+        
+        $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+        $updateResult = $this->model->update($decoded->id, $data);
+    
+        if ($updateResult === false) {
+            return $this->respondWithFormat([], 400, "Erro ao tentar atualizar o cliente.");
+        }
+    
+        return $this->respondWithFormat([], 200, "Cliente atualizado com sucesso.");
+    }
     /**
      * Delete the designated resource object from the model.
      *
@@ -112,6 +119,13 @@ class Client extends BaseController
      */
     public function delete($id = null)
     {
-        //
+        $decoded = $this->request->decodedToken;
+        $deleteResult = $this->model->delete($decoded->id);
+
+        if ($deleteResult === false) {
+            return $this->respondWithFormat([], 400, "Erro ao tentar deletar o cliente.");
+        }
+    
+        return $this->respondWithFormat([], 200, "Cliente deletado com sucesso.");
     }
 }

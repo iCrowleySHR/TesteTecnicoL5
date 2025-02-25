@@ -34,7 +34,6 @@ class JwtFilter implements FilterInterface
 
         $decoded = $this->jwtAuth->validateToken($token);
 
-        log_message('info', 'Token recebido: ' . $token);
 
         if (!$decoded) {
             return \Config\Services::response()->setJSON([
