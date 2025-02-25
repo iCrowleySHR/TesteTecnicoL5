@@ -28,8 +28,19 @@ class Product extends BaseController
      */
     public function show($id = null)
     {
-        //
+        if ($id !== null) {
+            $product = $this->model->where('id', $id)->first();
+        } else {
+            $product = $this->model->findAll();
+        }
+    
+        if ($product === null || empty($product)) {
+            return $this->respondWithFormat([], 404, "Produto não encontrado.");
+        }
+        
+        return $this->respondWithFormat($product, 200, "Produto retornado com sucesso.");
     }
+    
 
     /**
      * Return a new resource object, with default properties.
