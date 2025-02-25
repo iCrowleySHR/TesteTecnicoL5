@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Validation\ProductUpdateValidation;
 use CodeIgniter\HTTP\ResponseInterface;
 
 class Product extends BaseController
@@ -77,18 +78,6 @@ class Product extends BaseController
     }
 
     /**
-     * Return the editable properties of a resource object.
-     *
-     * @param int|string|null $id
-     *
-     * @return ResponseInterface
-     */
-    public function edit($id = null)
-    {
-        //
-    }
-
-    /**
      * Add or update a model resource, from "posted" properties.
      *
      * @param int|string|null $id
@@ -97,8 +86,29 @@ class Product extends BaseController
      */
     public function update($id = null)
     {
-        //
+        $data = $this->verifyIfEmptyRequest($this->request);
+        if ($data === null) {
+            return $this->respondWithFormat([], 400, "Nenhum dado foi enviado.");
+        }
+        
+        $validationResult = ProductUpdateValidation::validateUpdate($data);
+        
+        if (!empty($validationResult['errors'])) {
+            return $this->respondWithFormat($validationResult['errors'], 400, "Erro na validação dos dados.");
+        }
+    
+        $product = $this->model->where('id',$id)->where('client_id_creator', $this->request->decodedToken->id)->first();
+        if (!$product) {
+            return $this->respondWithFormat([], 404, "Produto não encontrado ou você não pode editar esse produto.");
+        }
+    
+        if (!$this->model->update($id, $data)) {
+            return $this->respondWithFormat([], 400, "Erro ao atualizar o produto.");
+        }
+    
+        return $this->respondWithFormat($this->model->find($id), 200, "Produto atualizado com sucesso.");
     }
+    
 
     /**
      * Delete the designated resource object from the model.
@@ -111,9 +121,7 @@ class Product extends BaseController
     {
         $decoded = $this->request->decodedToken;
     
-        $product = $this->model->where('id', $id) 
-                               ->where('client_id_creator', $decoded->id) 
-                               ->first(); 
+        $product = $this->model->where('id', $id)->where('client_id_creator', $decoded->id)->first(); 
         if ($product === null) {
             return $this->respondWithFormat([], 404, "Produto não encontrado ou você não é o dono dele.");
         }
