@@ -119,9 +119,7 @@ class Product extends BaseController
      */
     public function delete($id = null)
     {
-        $decoded = $this->request->decodedToken;
-    
-        $product = $this->model->where('id', $id)->where('client_id_creator', $decoded->id)->first(); 
+        $product = $this->model->where('id', $id)->where('client_id_creator', $this->request->decodedToken)->first(); 
         if ($product === null) {
             return $this->respondWithFormat([], 404, "Produto não encontrado ou você não é o dono dele.");
         }

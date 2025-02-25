@@ -50,8 +50,7 @@ class Client extends BaseController
      */
     public function show($id = null)
     {
-        $decoded = $this->request->decodedToken;
-        return $this->respondWithFormat($decoded, 200, "Dados do cliente retornados com sucesso.");
+        return $this->respondWithFormat($this->request->decodedToken, 200, "Dados do cliente retornados com sucesso.");
     }
 
     /**
@@ -92,8 +91,6 @@ class Client extends BaseController
         if ($data === null) {
             return $this->respondWithFormat([], 400, "Nenhum dado foi enviado.");
         }
-
-        $decoded = $this->request->decodedToken;
     
         $validationResult = ClientUpdateValidation::validateUpdate($data);
     
@@ -102,7 +99,7 @@ class Client extends BaseController
         }
         
         $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
-        $updateResult = $this->model->update($decoded->id, $data);
+        $updateResult = $this->model->update($this->request->decodedToken, $data);
     
         if ($updateResult === false) {
             return $this->respondWithFormat([], 400, "Erro ao tentar atualizar o cliente.");
@@ -120,8 +117,7 @@ class Client extends BaseController
      */
     public function delete($id = null)
     {
-        $decoded = $this->request->decodedToken;
-        $deleteResult = $this->model->delete($decoded->id);
+        $deleteResult = $this->model->delete($this->request->decodedToken);
 
         if ($deleteResult === false) {
             return $this->respondWithFormat([], 400, "Erro ao tentar deletar o cliente.");
