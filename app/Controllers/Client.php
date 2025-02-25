@@ -24,7 +24,7 @@ class Client extends BaseController
      */
     public function auth()
     {
-        $data = $this->verifyIfEmptyRequest($this->request);
+        $data = $this->request->getJSON(true);
         if ($data === null) {
             return $this->respondWithFormat([], 400, "Nenhum dado foi enviado.");
         }
@@ -60,7 +60,7 @@ class Client extends BaseController
      */
     public function create()
     {
-        $data = $this->verifyIfEmptyRequest($this->request);
+        $data = $this->request->getJSON(true);
         if ($data === null) {
             return $this->respondWithFormat([], 400, "Nenhum dado foi enviado.");
         }
@@ -87,7 +87,7 @@ class Client extends BaseController
      */
     public function update($id = null)
     {
-        $data = $this->verifyIfEmptyRequest($this->request);
+        $data = $this->request->getJSON(true);
         if ($data === null) {
             return $this->respondWithFormat([], 400, "Nenhum dado foi enviado.");
         }

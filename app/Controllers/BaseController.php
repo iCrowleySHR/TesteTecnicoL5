@@ -96,10 +96,4 @@ abstract class BaseController extends ResourceController
         return $cpf[9] == $digito1 && $cpf[10] == $digito2;
     }
 
-    protected function verifyIfEmptyRequest($request)
-    {
-        $data = $request->getJSON(true);
-    
-        return empty($data) ? null : $data;
-    }
 }
