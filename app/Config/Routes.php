@@ -17,3 +17,11 @@ $routes->group('client', [], function($routes) {
     });
 });
 
+$routes->group('product', ['filter' => 'jwt'], function($routes) {
+    $routes->post('create', 'Product::create');
+    // $routes->get('index', 'Product::index');
+    // $routes->get('show', 'Product::show');
+    $routes->delete('delete/(:num)', 'Product::delete/$1');
+    // $routes->put('update', 'Product::update');
+});
+

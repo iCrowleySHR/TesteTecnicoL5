@@ -3,10 +3,12 @@
 namespace App\Controllers;
 
 use CodeIgniter\HTTP\ResponseInterface;
-use CodeIgniter\RESTful\ResourceController;
 
-class Product extends ResourceController
+class Product extends BaseController
 {
+    protected $modelName = 'App\Models\ProductModel';
+    protected $format    = 'json';
+
     /**
      * Return an array of resource objects, themselves in array format.
      *
@@ -46,7 +48,21 @@ class Product extends ResourceController
      */
     public function create()
     {
-        //
+        $data = $this->verifyIfEmptyRequest($this->request);
+        if ($data === null) {
+            return $this->respondWithFormat([], 400, "Nenhum dado foi enviado.");
+        }
+
+        $data['client_id_creator'] = $this->request->decodedToken->id;
+    
+        if (!$this->model->insert($data)) {
+            return $this->respondWithFormat($this->model->errors(), 400, "Erro ao cadastrar produto.");
+        }
+
+        $productId = $this->model->insertID();
+        $data['id'] = $productId;
+
+        return $this->respondWithFormat($data, 201, "Produto cadastrado com sucesso.");
     }
 
     /**
@@ -82,6 +98,20 @@ class Product extends ResourceController
      */
     public function delete($id = null)
     {
-        //
+        $decoded = $this->request->decodedToken;
+    
+        $product = $this->model->where('id', $id) 
+                               ->where('client_id_creator', $decoded->id) 
+                               ->first(); 
+        if ($product === null) {
+            return $this->respondWithFormat([], 404, "Produto não encontrado ou você não é o dono dele.");
+        }
+    
+        if (!$this->model->delete($id)) {
+            return $this->respondWithFormat([], 400, "Erro ao tentar deletar o produto.");
+        }
+    
+        return $this->respondWithFormat([], 200, "Produto deletado com sucesso.");
     }
+    
 }

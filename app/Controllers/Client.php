@@ -75,7 +75,7 @@ class Client extends BaseController
         if (!$this->model->insert($data)) {
             return $this->respondWithFormat($this->model->errors(), 400, "Erro ao cadastrar cliente.");
         }
-        
+        unset($data['password']);
         return $this->respondWithFormat($data, 201, "Cliente cadastrado com sucesso.");
     }
 
@@ -110,6 +110,7 @@ class Client extends BaseController
     
         return $this->respondWithFormat([], 200, "Cliente atualizado com sucesso.");
     }
+    
     /**
      * Delete the designated resource object from the model.
      *
