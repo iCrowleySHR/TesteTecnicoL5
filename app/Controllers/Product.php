@@ -12,7 +12,7 @@ class Product extends BaseController
     protected $format    = 'json';
 
     /**
-     * Return the properties of a resource object.
+     * Usado para mostrar os produtos de todos cliente, pode usar parâmetros para busca e ID.
      *
      * @param int|string|null $id
      *
@@ -52,7 +52,7 @@ class Product extends BaseController
     
     
     /**
-     * Create a new resource object, from "posted" parameters.
+     * Usado para criar produtos.
      *
      * @return ResponseInterface
      */
@@ -75,7 +75,7 @@ class Product extends BaseController
     }
 
     /**
-     * Add or update a model resource, from "posted" properties.
+     * Usado para atualizar produtos criado pelo próprio cliente pelo ID.
      *
      * @param int|string|null $id
      *
@@ -108,7 +108,7 @@ class Product extends BaseController
     
 
     /**
-     * Delete the designated resource object from the model.
+     * Usado para deletar produtos criado pelo próprio cliente pelo ID.
      *
      * @param int|string|null $id
      *
@@ -128,6 +128,11 @@ class Product extends BaseController
         return $this->respondWithFormat([], 200, "Produto deletado com sucesso.");
     }
 
+    /**
+     * Usado para aplicar os filtros na consulta da função show.
+     * @param mixed $query
+     * @param mixed $filters
+     */
     private function applyFilters($query, $filters)
 {
     foreach ($filters as $key => $value) {

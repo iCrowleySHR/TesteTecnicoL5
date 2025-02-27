@@ -14,7 +14,7 @@ class Order extends BaseController
 
 
     /**
-     * Return the properties of a resource object.
+     * Usado para mostrar as ordens do próprio cliente, pode usar parâmetros para busca e ID.
      *
      * @param int|string|null $id
      *
@@ -34,7 +34,6 @@ class Order extends BaseController
             return $this->respondWithFormat(OrderResource::toArray($order), 200, "Ordem retornada com sucesso.");
         }
     
-        // Filtros para as ordens
         $filters = [
             'client_id'         => $this->request->getGet('client_id'),
             'status'            => $this->request->getGet('status'),
@@ -56,7 +55,7 @@ class Order extends BaseController
     }
 
     /**
-     * Create a new resource object, from "posted" parameters.
+     * Usado para criar novas ordens no banco.
      *
      * @return ResponseInterface
      */
@@ -80,7 +79,7 @@ class Order extends BaseController
 
 
     /**
-     * Add or update a model resource, from "posted" properties.
+     * Usado para atualizar dados da ordem pelo ID.
      *
      * @param int|string|null $id
      *
@@ -111,7 +110,7 @@ class Order extends BaseController
     }
 
     /**
-     * Delete the designated resource object from the model.
+     * Usado para deletar ordens pelo ID.
      *
      * @param int|string|null $id
      *
@@ -131,6 +130,11 @@ class Order extends BaseController
         return $this->respondWithFormat([], 200, "Produto deletado com sucesso.");
     }
 
+    /**
+     * Usado para aplicar os filtros na consulta da função show.
+     * @param mixed $query
+     * @param mixed $filters
+     */
     private function applyFilters($query, $filters)
 {
     foreach ($filters as $key => $value) {

@@ -48,6 +48,5 @@ class ProductResource
             ];
         }
 
-        throw new \InvalidArgumentException("O parâmetro deve ser um array ou um objeto de paginação do CodeIgniter.");
     }
 }

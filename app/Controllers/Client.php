@@ -19,7 +19,7 @@ class Client extends BaseController
     }
 
     /**
-     * Return an array of resource objects, themselves in array format.
+     * Usado para autenticar o usuário no sistema e gerar o seu token.
      *
      * @return ResponseInterface
      */
@@ -43,7 +43,7 @@ class Client extends BaseController
     }
 
     /**
-     * Return the properties of a resource object.
+     * Usado par a mostrar os dados do próprio cliente.
      *
      * @param int|string|null $id
      *
@@ -56,7 +56,7 @@ class Client extends BaseController
     }
 
     /**
-     * Create a new resource object, from "posted" parameters.
+     * Usado para cadastrar clientes.
      *
      * @return ResponseInterface
      */
@@ -83,7 +83,7 @@ class Client extends BaseController
     }
 
     /**
-     * Add or update a model resource, from "posted" properties.
+     * Usado para atualizar dados do cliente.
      *
      * @param int|string|null $id
      *
@@ -118,7 +118,7 @@ class Client extends BaseController
     }
     
     /**
-     * Delete the designated resource object from the model.
+     * Usado para deletar conta do cliente.
      *
      * @param int|string|null $id
      *
