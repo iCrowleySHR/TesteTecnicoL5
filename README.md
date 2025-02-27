@@ -273,7 +273,8 @@ Exemplo de resposta:
   - Cria um novo pedido com ID do produto, quantidade e status.
   
 - **Mostrar Pedidos**: `GET /order/show`
-  - Retorna uma lista de todos os pedidos.
+  - Retorna uma lista de todos os pedidos. Tendo filtro pela URL e páginação. Ex.:/order/show?status=pago
+  - tendo como filtro: 
   
 - **Mostrar Pedido por ID**: `GET /order/show/{id}`
   - Retorna os detalhes de um pedido específico.
