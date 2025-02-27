@@ -21,23 +21,33 @@ class Product extends BaseController
     public function show($id = null)
     {
         if ($id !== null) {
-            $isColletion = false;
             $product = $this->model->where('id', $id)->first();
-        } else {
-            $isColletion = true;
-            $product = $this->model->findAll();
-        }
-        
-        if ($product === null || empty($product)) {
-            return $this->respondWithFormat([], 404, "Produto não encontrado.");
-        }
-        
-        if ($isColletion === false) {
+    
+            if ($product === null) {
+                return $this->respondWithFormat("Produto não encontrado.", 404);
+            }
+    
             return $this->respondWithFormat(ProductResource::toArray($product), 200, "Produto retornado com sucesso.");
         }
-        
-        return $this->respondWithFormat(ProductResource::collection($product), 200, "Produtos retornados com sucesso.");
+    
+        $filters = [
+            'client_id_creator' => $this->request->getGet('client_id_creator'),
+            'price'             => $this->request->getGet('price'),
+            'name'              => $this->request->getGet('name'),
+            'description'       => $this->request->getGet('description'),
+            'created_at'        => $this->request->getGet('created_at'),
+            'updated_at'        => $this->request->getGet('updated_at'),
+        ];
+    
+        $perPage = $this->request->getGet('por_pagina') ?? 10;
+        $page = $this->request->getGet('pagina') ?? 1;
+    
+        $query = $this->applyFilters($this->model, $filters);
+        $products = $query->paginate($perPage, 'page', $page);
+    
+        return $this->respondWithFormat(ProductResource::collection($products), 200, "Produtos retornados com sucesso.");
     }
+    
     
     
     
@@ -106,7 +116,7 @@ class Product extends BaseController
      */
     public function delete($id = null)
     {
-        $product = $this->model->where('id', $id)->where('client_id_creator', $this->request->decodedToken)->first(); 
+        $product = $this->model->where('id', $id)->where('client_id_creator', $this->request->decodedToken->id)->first(); 
         if ($product === null) {
             return $this->respondWithFormat([], 404, "Produto não encontrado ou você não é o dono dele.");
         }
@@ -117,5 +127,28 @@ class Product extends BaseController
     
         return $this->respondWithFormat([], 200, "Produto deletado com sucesso.");
     }
+
+    private function applyFilters($query, $filters)
+{
+    foreach ($filters as $key => $value) {
+        if (!empty($value)) {
+            switch ($key) {
+                case 'name':
+                case 'description':
+                    $query->like($key, $value);
+                    break;
+                case 'client_id_creator':
+                case 'price':
+                    $query->where($key, $value);
+                    break;
+                case 'created_at':
+                case 'updated_at':
+                    $query->where("DATE($key)", $value);
+                    break;
+            }
+        }
+    }
+    return $query;
+}
     
 }

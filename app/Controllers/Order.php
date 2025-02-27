@@ -23,24 +23,37 @@ class Order extends BaseController
     public function show($id = null)
     {
         if ($id !== null) {
-            $isColletion = false;
-            $order = $this->model->where('id', $id)->where('client_id', $this->request->decodedToken->id)->first();
-        } else {
-            $isColletion = true;
-            $order = $this->model->where('client_id', $this->request->decodedToken->id)->findAll();
-        }
-
-        if ($order === null || empty($order)) {
-            return $this->respondWithFormat([], 404, "Ordem não encontrada ou ordem de outro cliente.");
-        }
-
-        if ($isColletion === false) {
+            $order = $this->model->where('id', $id)
+                ->where('client_id', $this->request->decodedToken->id)
+                ->first();
+    
+            if ($order === null) {
+                return $this->respondWithFormat([], 404, "Ordem não encontrada ou ordem de outro cliente.");
+            }
+    
             return $this->respondWithFormat(OrderResource::toArray($order), 200, "Ordem retornada com sucesso.");
         }
-
-        return $this->respondWithFormat(OrderResource::collection($order), 200, "Ordens retornadas com sucesso.");
+    
+        // Filtros para as ordens
+        $filters = [
+            'client_id'         => $this->request->getGet('client_id'),
+            'status'            => $this->request->getGet('status'),
+            'created_at'        => $this->request->getGet('created_at'),
+            'updated_at'        => $this->request->getGet('updated_at'),
+        ];
+    
+        $perPage = $this->request->getGet('por_pagina') ?? 10;
+        $page = $this->request->getGet('pagina') ?? 1;
+    
+        $query = $this->applyFilters($this->model, $filters);
+        $orders = $query->paginate($perPage, 'page', $page);
+    
+        if (empty($orders)) {
+            return $this->respondWithFormat([], 404, "Nenhuma ordem encontrada para este cliente.");
+        }
+    
+        return $this->respondWithFormat(OrderResource::collection($orders), 200, "Ordens retornadas com sucesso.");
     }
-
 
     /**
      * Create a new resource object, from "posted" parameters.
@@ -117,4 +130,25 @@ class Order extends BaseController
     
         return $this->respondWithFormat([], 200, "Produto deletado com sucesso.");
     }
+
+    private function applyFilters($query, $filters)
+{
+    foreach ($filters as $key => $value) {
+        if (!empty($value)) {
+            switch ($key) {
+                case 'status':
+                    $query->where($key, $value);
+                    break;
+                case 'client_id':
+                    $query->where($key, $value);
+                    break;
+                case 'created_at':
+                case 'updated_at':
+                    $query->where("DATE($key)", $value);
+                    break;
+            }
+        }
+    }
+    return $query;
+}
 }
