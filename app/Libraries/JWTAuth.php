@@ -4,14 +4,17 @@ namespace App\Libraries;
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use App\Models\ClientModel;
 
 class JWTAuth
 {
     private $key;
+    private $model; 
 
     public function __construct()
     {
         $this->key = getenv('JWT_SECRET_KEY');
+        $this->model = new ClientModel(); 
     }
 
     public function generateToken($data)
@@ -24,15 +27,19 @@ class JWTAuth
     {
         try {
             $decoded = JWT::decode($token, new Key($this->key, 'HS256'));
+            
             if ($decoded->exp < time()) {
                 return null; 
             }
+
+            if ($this->model->find($decoded->id) === null) {
+                return null;
+            }
+
             return $decoded;
         } catch (\UnexpectedValueException $e) {
             log_message('error', 'Token inválido: ' . $e->getMessage());
         }
         return null;
     }
-
-    
 }

@@ -126,7 +126,7 @@ class Client extends BaseController
      */
     public function delete($id = null)
     {
-        $deleteResult = $this->model->delete($this->request->decodedToken);
+        $deleteResult = $this->model->delete($this->request->decodedToken->id);
 
         if ($deleteResult === false) {
             return $this->respondWithFormat([], 400, "Erro ao tentar deletar o cliente.");
