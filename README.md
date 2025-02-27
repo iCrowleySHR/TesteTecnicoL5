@@ -80,7 +80,7 @@ Exemplo de resposta:
 	},
 	"retorno": {
 		"id": "2",
-		"cpf": "16815031829",
+		"cpf": "22474347038",
 		"name": "Gustavo Gualda",
 		"email": "gustavogualda10@gmail.com",
 		"created_at": "2025-02-27 16:43:08",
@@ -106,7 +106,7 @@ Exemplo de resposta:
 	},
 	"retorno": {
 		"id": "2",
-		"cpf": "16815031829",
+		"cpf": "22474347038",
 		"name": "Gustavo Gualda",
 		"email": "gustavogualda10@gmail.com",
 		"created_at": "2025-02-27 16:43:08",
