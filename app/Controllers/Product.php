@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Resources\ProductResource;
 use App\Validation\ProductUpdateValidation;
 use CodeIgniter\HTTP\ResponseInterface;
 
@@ -9,16 +10,6 @@ class Product extends BaseController
 {
     protected $modelName = 'App\Models\ProductModel';
     protected $format    = 'json';
-
-    /**
-     * Return an array of resource objects, themselves in array format.
-     *
-     * @return ResponseInterface
-     */
-    public function index()
-    {
-        //
-    }
 
     /**
      * Return the properties of a resource object.
@@ -30,29 +21,26 @@ class Product extends BaseController
     public function show($id = null)
     {
         if ($id !== null) {
+            $isColletion = false;
             $product = $this->model->where('id', $id)->first();
         } else {
+            $isColletion = true;
             $product = $this->model->findAll();
         }
-    
+        
         if ($product === null || empty($product)) {
             return $this->respondWithFormat([], 404, "Produto não encontrado.");
         }
         
-        return $this->respondWithFormat($product, 200, "Produto retornado com sucesso.");
+        if ($isColletion === false) {
+            return $this->respondWithFormat(ProductResource::toArray($product), 200, "Produto retornado com sucesso.");
+        }
+        
+        return $this->respondWithFormat(ProductResource::collection($product), 200, "Produtos retornados com sucesso.");
     }
     
-
-    /**
-     * Return a new resource object, with default properties.
-     *
-     * @return ResponseInterface
-     */
-    public function new()
-    {
-        //
-    }
-
+    
+    
     /**
      * Create a new resource object, from "posted" parameters.
      *
@@ -71,10 +59,9 @@ class Product extends BaseController
             return $this->respondWithFormat($this->model->errors(), 400, "Erro ao cadastrar produto.");
         }
 
-        $productId = $this->model->insertID();
-        $data['id'] = $productId;
+        $product = $this->model->find($this->model->insertID());
 
-        return $this->respondWithFormat($data, 201, "Produto cadastrado com sucesso.");
+        return $this->respondWithFormat(ProductResource::toArray($product), 201, "Produto cadastrado com sucesso.");
     }
 
     /**
@@ -105,8 +92,8 @@ class Product extends BaseController
         if (!$this->model->update($id, $data)) {
             return $this->respondWithFormat([], 400, "Erro ao atualizar o produto.");
         }
-    
-        return $this->respondWithFormat($this->model->find($id), 200, "Produto atualizado com sucesso.");
+        
+        return $this->respondWithFormat(ProductResource::toArray($this->model->find($id)), 200, "Produto atualizado com sucesso.");
     }
     
 

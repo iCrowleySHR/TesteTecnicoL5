@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Libraries\JWTAuth;
+use App\Resources\ClientResource;
 use App\Validation\ClientUpdateValidation;
 use CodeIgniter\HTTP\ResponseInterface;
 
@@ -25,7 +26,7 @@ class Client extends BaseController
     public function auth()
     {
         $data = $this->request->getJSON(true);
-        if ($data === null) {
+        if ($data === null || empty($data['email']) || empty($data['password'])) {
             return $this->respondWithFormat([], 400, "Nenhum dado foi enviado.");
         }
 
@@ -50,7 +51,7 @@ class Client extends BaseController
      */
     public function show($id = null)
     {
-        return $this->respondWithFormat($this->request->decodedToken, 200, "Dados do cliente retornados com sucesso.");
+        return $this->respondWithFormat(ClientResource::toArray($this->request->decodedToken) , 200, "Dados do cliente retornados com sucesso.");
     }
 
     /**
@@ -74,8 +75,10 @@ class Client extends BaseController
         if (!$this->model->insert($data)) {
             return $this->respondWithFormat($this->model->errors(), 400, "Erro ao cadastrar cliente.");
         }
-        unset($data['password']);
-        return $this->respondWithFormat($data, 201, "Cliente cadastrado com sucesso.");
+        
+        $client = $this->model->find($this->model->getInsertID());
+
+        return $this->respondWithFormat(ClientResource::toArray($client), 201, "Cliente cadastrado com sucesso.");
     }
 
     /**
@@ -98,14 +101,19 @@ class Client extends BaseController
             return $this->respondWithFormat($validationResult['errors'], 400, "Erro ao atualizar cliente.");
         }
         
-        $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
-        $updateResult = $this->model->update($this->request->decodedToken, $data);
-    
-        if ($updateResult === false) {
-            return $this->respondWithFormat([], 400, "Erro ao tentar atualizar o cliente.");
+        if (!empty($data['password'])) {
+            $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+        } else {
+            unset($data['password']);
         }
     
-        return $this->respondWithFormat([], 200, "Cliente atualizado com sucesso.");
+        if (!$this->model->update($this->request->decodedToken->id, $data)) {
+            return $this->respondWithFormat([], 400, "Erro ao tentar atualizar o cliente.");
+        }
+
+        $client = $this->model->find($this->request->decodedToken->id);
+
+        return $this->respondWithFormat(ClientResource::toArray($client), 200, "Cliente atualizado com sucesso.");
     }
     
     /**

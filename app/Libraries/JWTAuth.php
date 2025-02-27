@@ -25,16 +25,11 @@ class JWTAuth
         try {
             $decoded = JWT::decode($token, new Key($this->key, 'HS256'));
             if ($decoded->exp < time()) {
-                log_message('error', 'Token expirado.');
                 return null; 
             }
             return $decoded;
         } catch (\UnexpectedValueException $e) {
             log_message('error', 'Token inválido: ' . $e->getMessage());
-        } catch (\DomainException $e) {
-            log_message('error', 'Erro de domínio: ' . $e->getMessage());
-        } catch (\Exception $e) {
-            log_message('error', 'Erro ao decodificar token: ' . $e->getMessage());
         }
         return null;
     }

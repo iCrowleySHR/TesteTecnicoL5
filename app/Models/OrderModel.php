@@ -21,17 +21,12 @@ class OrderModel extends Model
     protected $useTimestamps = true;
 
     protected $validationRules = [
-        'client_id' => 'required|is_not_unique[client.id]',
         'product_id' => 'required|is_not_unique[products.id]',
         'quantity' => 'required|integer',
         'status' => 'required|in_list[Em Aberto,Pago,Cancelado]',
     ];
 
     protected $validationMessages = [
-        'client_id' => [
-            'required' => 'O ID do cliente é obrigatório.',
-            'is_not_unique' => 'Este ID de cliente não existe.',
-        ],
         'product_id' => [
             'required' => 'O ID do produto é obrigatório.',
             'is_not_unique' => 'Este ID de produto não existe.',
