@@ -1,20 +1,7 @@
 # Projeto de API RESTful (Teste Técnico L5 Network)
 
-Este projeto é uma API RESTful que gerencia clientes, produtos e pedidos. Ele foi desenvolvido para ser testado localmente e utiliza o **Insomnia** para simular requisições HTTP. Abaixo estão as instruções para configurar e utilizar a API.
+Este projeto é uma API RESTful que gerencia clientes, produtos e pedidos. Ela foi desenvolvida usando Code Igniter 4 e utiliza o **Insomnia** para simular requisições HTTP (onde o arquivo pode ser encontrado na raiz do projeto). Abaixo estão as instruções para configurar e utilizar a API.
 
-## 📋 Tabela de Conteúdos
-
-- [Visão Geral](#-visão-geral)
-- [Rotas da API](#-rotas-da-api)
-  - [Clientes](#clientes)
-  - [Produtos](#produtos)
-  - [Pedidos](#pedidos)
-- [Configuração do Ambiente](#-configuração-do-ambiente)
-- [Autenticação](#-autenticação)
-- [Como Testar com o Insomnia](#-como-testar-com-o-insomnia)
-- [Exemplos de Requisições](#-exemplos-de-requisições)
-
----
 
 ## 🌐 Visão Geral
 
@@ -145,17 +132,140 @@ Exemplo de resposta:
 - **Criar Produto**: `POST /product/create`
   - Cria um novo produto com nome, preço e descrição.
   
+Exemplo de envio:
+```
+{
+    "name": "Produto XYZ",
+    "price": 19.99,
+    "description": "ABCDEFGHIJ"
+}
+```
+Exemplo de resposta:
+```
+{
+	"cabecalho": {
+		"status": 201,
+		"mensagem": "Produto cadastrado com sucesso."
+	},
+	"retorno": {
+		"id": "11",
+		"client_id_creator": "2",
+		"price": "19.99",
+		"name": "Produto XYZ",
+		"description": "ABCDEFGHIJ",
+		"created_at": "2025-02-27 17:29:02",
+		"updated_at": "2025-02-27 17:29:02"
+	}
+}
+```
+  
 - **Mostrar Produtos**: `GET /product/show`
-  - Retorna uma lista de todos os produtos.
+  - Retorna uma lista de todos os produtos. (Podendo ver todos os produtos cadastrados)
+    
+Exemplo de resposta
+```
+{
+	"cabecalho": {
+		"status": 200,
+		"mensagem": "Produtos retornados com sucesso."
+	},
+	"retorno": [
+		{
+			"id": "1",
+			"client_id_creator": "2",
+			"price": "19.99",
+			"name": "Produto XYZ",
+			"description": "ABCDEFGHIJ",
+			"created_at": "2025-02-27 17:04:59",
+			"updated_at": "2025-02-27 17:04:59"
+		},
+		{
+			"id": "2",
+			"client_id_creator": "2",
+			"price": "19.99",
+			"name": "Produto XYZ",
+			"description": "ABCDEFGHIJ",
+			"created_at": "2025-02-27 17:05:00",
+			"updated_at": "2025-02-27 17:05:00"
+		},
+		{
+			"id": "10",
+			"client_id_creator": "2",
+			"price": "19.99",
+			"name": "Produto XYZ",
+			"description": "ABCDEFGHIJ",
+			"created_at": "2025-02-27 17:28:08",
+			"updated_at": "2025-02-27 17:28:08"
+		}
+	]
+}
+```
   
 - **Mostrar Produto por ID**: `GET /product/show/{id}`
-  - Retorna os detalhes de um produto específico.
+  - Retorna os detalhes de um produto específico. 
+    
+Exemplo de resposta:
+```
+{
+	"cabecalho": {
+		"status": 200,
+		"mensagem": "Produto retornado com sucesso."
+	},
+	"retorno": {
+		"id": "10",
+		"client_id_creator": "2",
+		"price": "19.99",
+		"name": "Produto XYZ",
+		"description": "ABCDEFGHIJ",
+		"created_at": "2025-02-27 17:28:08",
+		"updated_at": "2025-02-27 17:28:08"
+	}
+}
+```
   
 - **Atualizar Produto**: `PUT /product/update/{id}`
-  - Atualiza os dados de um produto existente.
+  - Atualiza os dados de um produto existente. Sendo necessário apenas o campo que ira atualizar, sendo: name, price e description. (Podendo atualizar apenas o produto que você mesmo criou).
+  - 
+Exemplo de envio:
+```
+{
+    "name": "Produto XYZ",
+    "price": 195.99,
+    "description": "ABCDEFGHIJ"
+}
+```
+Exemplo de resposta:
+```
+{
+	"cabecalho": {
+		"status": 200,
+		"mensagem": "Produto atualizado com sucesso."
+	},
+	"retorno": {
+		"id": "12",
+		"client_id_creator": "5",
+		"price": "195.99",
+		"name": "Produto XYZ",
+		"description": "ABCDEFGHIJ",
+		"created_at": "2025-02-27 19:34:13",
+		"updated_at": "2025-02-27 19:34:18"
+	}
+}
+```
   
 - **Excluir Produto**: `DELETE /product/delete/{id}`
-  - Exclui um produto específico.
+  - Exclui um produto específico. (Podendo excluir apenas produtos que você mesmo criou).
+    
+Exemplo de resposta:
+```
+{
+	"cabecalho": {
+		"status": 200,
+		"mensagem": "Produto deletado com sucesso."
+	},
+	"retorno": []
+}
+```
 
 ### Pedidos
 
@@ -172,6 +282,6 @@ Exemplo de resposta:
   - Atualiza o status de um pedido existente.
   
 - **Excluir Pedido**: `DELETE /order/delete/{id}`
-  - Exclui um pedido específico.
+  - Exclui um pedido específico. (Podendo excluir apenas pedidos que você mesmo criou).
 
 ---
