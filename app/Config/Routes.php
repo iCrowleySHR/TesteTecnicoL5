@@ -25,3 +25,10 @@ $routes->group('product', ['filter' => 'jwt'], function($routes) {
     $routes->put('update/(:num)', 'Product::update/$1');
 });
 
+$routes->group('order', ['filter' => 'jwt'], function($routes) {
+    $routes->post('create', 'Order::create');
+    $routes->get('show/(:num)', 'Order::show/$1');
+    $routes->get('show', 'Order::show');    
+    $routes->delete('delete/(:num)', 'Order::delete/$1');
+    $routes->put('update/(:num)', 'Order::update/$1');
+});

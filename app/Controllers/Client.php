@@ -51,7 +51,8 @@ class Client extends BaseController
      */
     public function show($id = null)
     {
-        return $this->respondWithFormat(ClientResource::toArray($this->request->decodedToken) , 200, "Dados do cliente retornados com sucesso.");
+        $client = $this->model->find($this->request->decodedToken->id);
+        return $this->respondWithFormat(ClientResource::toArray($client) , 200, "Dados do cliente retornados com sucesso.");
     }
 
     /**
