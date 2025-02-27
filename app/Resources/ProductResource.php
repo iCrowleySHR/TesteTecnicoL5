@@ -27,11 +27,11 @@ class ProductResource
         if ($products instanceof Pager) {
             return [
                 'data' => array_map(fn($product) => self::toArray($product), $products->getData()),
-                'paginacao' => [
-                    'pagina_atual'  => $products->getCurrentPage(),
-                    'por_pagina'    => $products->getPerPage(),
+                'pagination' => [
+                    'current_page'  => $products->getCurrentPage(),
+                    'per_page'    => $products->getPerPage(),
                     'total'         => $products->getTotal(),
-                    'ultima_pagina' => $products->getLastPage(),
+                    'last_page' => $products->getLastPage(),
                 ]
             ];
         }
@@ -39,11 +39,11 @@ class ProductResource
         if (is_array($products)) {
             return [
                 'data' => array_map(fn($product) => self::toArray($product), $products),
-                'paginacao' => [
-                    'pagina_atual'  => 1, 
-                    'por_pagina'    => count($products),
+                'pagination' => [
+                    'current_page'  => 1, 
+                    'per_page'    => count($products),
                     'total'         => count($products),
-                    'ultima_pagina' => 1,
+                    'last_page' => 1,
                 ]
             ];
         }

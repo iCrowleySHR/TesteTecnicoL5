@@ -27,24 +27,23 @@ class OrderResource
         if ($orders instanceof Pager) {
             return [
                 'data' => array_map(fn($order) => self::toArray($order), $orders->getData()),
-                'paginacao' => [
-                    'pagina_atual'  => $orders->getCurrentPage(),
-                    'por_pagina'    => $orders->getPerPage(),
+                'pagination' => [
+                    'current_page'  => $orders->getCurrentPage(),
+                    'per_page'    => $orders->getPerPage(),
                     'total'         => $orders->getTotal(),
-                    'ultima_pagina' => $orders->getLastPage(),
+                    'last_page' => $orders->getLastPage(),
                 ]
             ];
         }
 
-        // Se for um array simples
         if (is_array($orders)) {
             return [
                 'data' => array_map(fn($order) => self::toArray($order), $orders),
-                'paginacao' => [
-                    'pagina_atual'  => 1, 
-                    'por_pagina'    => count($orders),
+                'pagination' => [
+                    'current_page'  => 1, 
+                    'per_page'    => count($orders),
                     'total'         => count($orders),
-                    'ultima_pagina' => 1,
+                    'last_page' => 1,
                 ]
             ];
         }
