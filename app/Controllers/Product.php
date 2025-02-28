@@ -30,7 +30,6 @@ class Product extends BaseController
             return $this->respondWithFormat(ProductResource::toArray($product), 200, "Produto retornado com sucesso.");
         }
     
-        // Filtros
         $filters = [
             'client_id_creator' => $this->request->getGet('cliente_id_criador'),
             'price'             => $this->request->getGet('preco'),
@@ -40,21 +39,17 @@ class Product extends BaseController
             'updated_at'        => $this->request->getGet('atualizado_em'),
         ];
     
-        // Paginação
         $perPage = $this->request->getGet('por_pagina') ?? 10;
         $page = $this->request->getGet('pagina') ?? 1;
     
-        // Aplica filtros e paginação
         $query = $this->applyFilters($this->model, $filters);
         $products = $query->paginate($perPage, 'default', $page);
         $pager = $query->pager;
     
-        // Verifica se há produtos
         if (empty($products)) {
             return $this->respondWithFormat([], 200, "Nenhum produto encontrado.");
         }
     
-        // Retorna os produtos paginados
         return $this->respondWithFormat(ProductResource::collection($products, $pager), 200, "Produtos retornados com sucesso.");
     }
     

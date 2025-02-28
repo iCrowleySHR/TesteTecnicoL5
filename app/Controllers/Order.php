@@ -125,10 +125,10 @@ class Order extends BaseController
         }
     
         if (!$this->model->delete($id)) {
-            return $this->respondWithFormat([], 400, "Erro ao tentar deletar o produto.");
+            return $this->respondWithFormat([], 400, "Erro ao tentar deletar o Ordem.");
         }
     
-        return $this->respondWithFormat([], 200, "Produto deletado com sucesso.");
+        return $this->respondWithFormat([], 200, "Ordem deletado com sucesso.");
     }
 
     /**
