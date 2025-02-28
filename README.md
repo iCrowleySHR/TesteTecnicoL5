@@ -34,12 +34,14 @@ Siga os passos abaixo para configurar o projeto CodeIgniter 4.
    - Abra o arquivo `.env` e configure as variáveis conforme necessário, incluindo o banco de dados.
 
 
-5. **Crie o banco de dados e aplique as migrações** *(caso utilize banco de dados)*
+5. **Crie o banco de dados e aplique as migrações**
+   - Criar um banco com nome `testetecnicol5`.
+     
    ```sh
    php spark migrate
    ```
 
-6. **Inicie o servidor local**
+7. **Inicie o servidor local**
    ```sh
    php spark serve
    ```
