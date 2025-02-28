@@ -14,16 +14,16 @@ O sistema conta também com validação de CPF e Email e em todos os campos, com
 
 ### Clientes
 
-- **Criar Cliente**: `POST /client/create`
+### **Criar Cliente**: `POST /client/create`
   - Cria um novo cliente com nome, CPF, e-mail e senha.
  
 Exemplo de envio :
 ```
 {
-	"name": "Gustavo Gualda",
+	"nome": "Gustavo Gualda",
 	"cpf": 22474347038,
 	"email": "gustavogualda@gmail.com",
-	"password": "1234526"
+	"senha": "1234526"
 }
 ```
 
@@ -37,22 +37,22 @@ Exemplo de resposta:
 	"retorno": {
 		"id": "5",
 		"cpf": "22474347038",
-		"name": "Gustavo Gualda",
+		"nome": "Gustavo Gualda",
 		"email": "gustavogualda@gmail.com",
-		"created_at": "2025-02-27 18:52:22",
-		"updated_at": "2025-02-27 18:52:22"
+		"criado_em": "2025-02-27 18:52:22",
+		"atualizado_em": "2025-02-27 18:52:22"
 	}
 }
 ```
 
-- **Autenticar Cliente**: `POST /client/auth`
+### **Autenticar Cliente**: `POST /client/auth`
   - Autentica o cliente e retorna um token JWT para uso nas demais rotas.
   
 Exemplo de envio:
 ```
 {
 	"email": "gustavogualda@gmail.com",
-	"password": "1234526"
+	"senha": "1234526"
 }
 ```
 
@@ -69,7 +69,7 @@ Exemplo de resposta:
 }
 ```
   
-- **Mostrar Dados do Cliente**: `GET /client/show`
+### **Mostrar Dados do Cliente**: `GET /client/show`
   - Retorna os dados do cliente autenticado.
 Exemplo de resposta:
 ```
@@ -81,16 +81,16 @@ Exemplo de resposta:
 	"retorno": {
 		"id": "2",
 		"cpf": "22474347038",
-		"name": "Gustavo Gualda",
+		"nome": "Gustavo Gualda",
 		"email": "gustavogualda10@gmail.com",
-		"created_at": "2025-02-27 16:43:08",
-		"updated_at": "2025-02-27 18:22:28"
+		"criado_em": "2025-02-27 16:43:08",
+		"atualizado_em": "2025-02-27 18:22:28"
 	}
 }
 ```
   
-- **Atualizar Dados do Cliente**: `PUT /client/update`
-  - Atualiza os dados do cliente (ex.: e-mail). Sendo necessário o dado que vai atualizar no JSON, sendo o: e-mail, senha e name
+### **Atualizar Dados do Cliente**: `PUT /client/update`
+  - Atualiza os dados do cliente (ex.: e-mail). Sendo necessário o dado que vai atualizar no JSON, não precisando ser todos, sendo o: e-mail, senha e/ou nome
 Exemplo de envio:
 ```
 {
@@ -107,15 +107,15 @@ Exemplo de resposta:
 	"retorno": {
 		"id": "2",
 		"cpf": "22474347038",
-		"name": "Gustavo Gualda",
+		"nome": "Gustavo Gualda",
 		"email": "gustavogualda10@gmail.com",
-		"created_at": "2025-02-27 16:43:08",
-		"updated_at": "2025-02-27 18:22:28"
+		"criado_em": "2025-02-27 16:43:08",
+		"atualizado_em": "2025-02-27 18:22:28"
 	}
 }
 ```
   
-- **Excluir Conta do Cliente**: `DELETE /client/delete`
+### **Excluir Conta do Cliente**: `DELETE /client/delete`
   - Exclui a conta do cliente autenticado.
  ```
 {
@@ -135,9 +135,9 @@ Exemplo de resposta:
 Exemplo de envio:
 ```
 {
-    "name": "Produto XYZ",
-    "price": 19.99,
-    "description": "ABCDEFGHIJ"
+    "nome": "Produto XYZ",
+    "preco": 19.99,
+    "descricao": "ABCDEFGHIJ"
 }
 ```
 Exemplo de resposta:
@@ -149,19 +149,32 @@ Exemplo de resposta:
 	},
 	"retorno": {
 		"id": "11",
-		"client_id_creator": "2",
-		"price": "19.99",
-		"name": "Produto XYZ",
-		"description": "ABCDEFGHIJ",
-		"created_at": "2025-02-27 17:29:02",
-		"updated_at": "2025-02-27 17:29:02"
+		"cliente_id_criador": "2",
+		"preco": "19.99",
+		"nome": "Produto XYZ",
+		"descricao": "ABCDEFGHIJ",
+		"criado_em": "2025-02-27 17:29:02",
+		"atualizado_em": "2025-02-27 17:29:02"
 	}
 }
 ```
   
-- **Mostrar Produtos**: `GET /product/show`
-  - Retorna uma lista de todos os produtos. (Podendo ver todos os produtos cadastrados)
-    
+### **Mostrar Produtos**: `GET /product/show`
+Retorna uma lista de todos os produtos cadastrados. Você pode filtrar os resultados passando parâmetros pela URL.
+
+#### Parâmetros opcionais:
+- `cliente_id_criador` (string) - ID do cliente criador do produto.
+- `preco` (float) - Preço do produto.
+- `nome` (string) - Nome do produto.
+- `descricao` (string) - Descrição do produto.
+- `criado_em` (string, formato: YYYY-MM-DD) - Data de criação do produto.
+- `atualzado_em` (string, formato: YYYY-MM-DD) - Data de última atualização do produto.
+- `pagina` (int) - Página que deseja acessar.
+- `por_pagina` (int) - Quantos objetos deseja por página.
+
+#### Exemplo da URL:
+`GET /product/show?client_id_creator=123&price=49.99&name=ProdutoExemplo&created_at=2025-02-01`
+
 Exemplo de resposta
 ```
 {
@@ -169,39 +182,38 @@ Exemplo de resposta
 		"status": 200,
 		"mensagem": "Produtos retornados com sucesso."
 	},
-	"retorno": [
-		{
-			"id": "1",
-			"client_id_creator": "2",
-			"price": "19.99",
-			"name": "Produto XYZ",
-			"description": "ABCDEFGHIJ",
-			"created_at": "2025-02-27 17:04:59",
-			"updated_at": "2025-02-27 17:04:59"
-		},
-		{
-			"id": "2",
-			"client_id_creator": "2",
-			"price": "19.99",
-			"name": "Produto XYZ",
-			"description": "ABCDEFGHIJ",
-			"created_at": "2025-02-27 17:05:00",
-			"updated_at": "2025-02-27 17:05:00"
-		},
-		{
-			"id": "10",
-			"client_id_creator": "2",
-			"price": "19.99",
-			"name": "Produto XYZ",
-			"description": "ABCDEFGHIJ",
-			"created_at": "2025-02-27 17:28:08",
-			"updated_at": "2025-02-27 17:28:08"
+	"retorno": {
+		"dados": [
+			{
+				"id": "1",
+				"cliente_id_criador": "1",
+				"preco": "19.99",
+				"nome": "Produto XYZ",
+				"descricao": "ABCDEFGHIJ",
+				"criado_em": "2025-02-28 00:33:17",
+				"atualizado_em": "2025-02-28 00:33:17"
+			},
+			{
+				"id": "2",
+				"cliente_id_criador": "1",
+				"preco": "19.99",
+				"nome": "Produto karla",
+				"descricao": "ABCDEFGHIJ",
+				"criado_em": "2025-02-28 00:40:48",
+				"atualizado_em": "2025-02-28 00:40:48"
+			}
+		],
+		"paginacao": {
+			"pagina_atual": 1,
+			"por_pagina": 2,
+			"total": 21,
+			"ultima_pagina": 11
 		}
-	]
+	}
 }
 ```
   
-- **Mostrar Produto por ID**: `GET /product/show/{id}`
+### **Mostrar Produto por ID**: `GET /product/show/{id}`
   - Retorna os detalhes de um produto específico. 
     
 Exemplo de resposta:
@@ -211,27 +223,27 @@ Exemplo de resposta:
 		"status": 200,
 		"mensagem": "Produto retornado com sucesso."
 	},
-	"retorno": {
+	"retorno":{
 		"id": "10",
-		"client_id_creator": "2",
-		"price": "19.99",
-		"name": "Produto XYZ",
-		"description": "ABCDEFGHIJ",
-		"created_at": "2025-02-27 17:28:08",
-		"updated_at": "2025-02-27 17:28:08"
-	}
+		"cliente_id_criador": "2",
+		"preco": "19.99",
+		"nome": "Produto XYZ",
+		"descricao": "ABCDEFGHIJ",
+		"criado_em": "2025-02-27 17:04:59",
+		"atualizado_em": "2025-02-27 17:04:59"
+		},
 }
 ```
   
-- **Atualizar Produto**: `PUT /product/update/{id}`
-  - Atualiza os dados de um produto existente. Sendo necessário apenas o campo que ira atualizar, sendo: name, price e description. (Podendo atualizar apenas o produto que você mesmo criou).
-  - 
+### **Atualizar Produto**: `PUT /product/update/{id}`
+  - Atualiza os dados de um produto existente. Sendo necessário apenas o campo que irá atualizar, sendo: nome, preco e/ou descricao. (Podendo atualizar apenas o produto que você mesmo criou).
+
 Exemplo de envio:
 ```
 {
-    "name": "Produto XYZ",
-    "price": 195.99,
-    "description": "ABCDEFGHIJ"
+    "nome": "Produto XYZ",
+    "preco": 195.99,
+    "descricao": "ABCDEFGHIJ"
 }
 ```
 Exemplo de resposta:
@@ -243,17 +255,17 @@ Exemplo de resposta:
 	},
 	"retorno": {
 		"id": "12",
-		"client_id_creator": "5",
-		"price": "195.99",
-		"name": "Produto XYZ",
-		"description": "ABCDEFGHIJ",
-		"created_at": "2025-02-27 19:34:13",
-		"updated_at": "2025-02-27 19:34:18"
+		"cliente_id_criador": "5",
+		"preco": "195.99",
+		"nome": "Produto XYZ",
+		"descricao": "ABCDEFGHIJ",
+		"criado_em": "2025-02-27 19:34:13",
+		"atualizado_em": "2025-02-27 19:34:18"
 	}
 }
 ```
   
-- **Excluir Produto**: `DELETE /product/delete/{id}`
+### **Excluir Produto**: `DELETE /product/delete/{id}`
   - Exclui um produto específico. (Podendo excluir apenas produtos que você mesmo criou).
     
 Exemplo de resposta:
@@ -269,20 +281,107 @@ Exemplo de resposta:
 
 ### Pedidos
 
-- **Criar Pedido**: `POST /order/create`
+### **Criar Pedido**: `POST /order/create`
   - Cria um novo pedido com ID do produto, quantidade e status.
+Exemplo de envio:
+```
+{
+	"product_id": "1",
+	"quantity": "1",
+	"status": "Em Aberto"
+}
+```
+Exemplo de resposta:
+```
+{
+	"cabecalho": {
+		"status": 201,
+		"mensagem": "Ordem cadastrada com sucesso."
+	},
+	"retorno": {
+		"id": "19",
+		"cliente_id": "1",
+		"produto_id": "1",
+		"quantidade": 1,
+		"status": "Em Aberto",
+		"criado_em": "2025-02-28 01:05:00",
+		"atualizado_em": "2025-02-28 01:05:00"
+	}
+}
+```
   
-- **Mostrar Pedidos**: `GET /order/show`
-  - Retorna uma lista de todos os pedidos. Tendo filtro pela URL e páginação. Ex.:/order/show?status=pago
-  - tendo como filtro: 
-  
-- **Mostrar Pedido por ID**: `GET /order/show/{id}`
-  - Retorna os detalhes de um pedido específico.
-  
-- **Atualizar Pedido**: `PUT /order/update/{id}`
-  - Atualiza o status de um pedido existente.
-  
-- **Excluir Pedido**: `DELETE /order/delete/{id}`
-  - Exclui um pedido específico. (Podendo excluir apenas pedidos que você mesmo criou).
+### **Mostrar Pedidos**: `GET /order/show`
+Retorna uma lista de todos os pedidos cadastrados. A requisição pode ser filtrada pela URL e possui paginação.
 
+#### Parâmetros opcionais:
+- `client_id` (int) - ID do cliente que fez o pedido.
+- `status` (string) - Status do pedido (ex: `pago`, `pendente`, `cancelado`).
+- `created_at` (string, formato: YYYY-MM-DD) - Data de criação do pedido.
+- `updated_at` (string, formato: YYYY-MM-DD) - Data de última atualização do pedido.
+- `pagina` (int) - Página que deseja acessar.
+- `por_pagina` (int) - Quantos objetos deseja por página.
+
+#### Exemplo de solicitação:
+`GET /order/show?status=pago&client_id=123&created_at=2025-02-01&page=2`
+  
+### **Mostrar Pedido por ID**: `GET /order/show/{id}`
+  - Retorna os detalhes de um pedido específico.
+Exemplo de resposta:
+```
+{
+	"cabecalho": {
+		"status": 200,
+		"mensagem": "Ordem retornada com sucesso."
+	},
+	"retorno": {
+		"id": "2",
+		"cliente_id": "1",
+		"produto_id": "1",
+		"quantidade": 1,
+		"status": "Em Aberto",
+		"criado_em": "2025-02-28 01:04:57",
+		"atualizado_em": "2025-02-28 01:04:57"
+	}
+}
+```
+### **Atualizar Pedido**: `PUT /order/update/{id}`
+  - Atualiza o status de um pedido existente. (Apenas o cliente criador do pedido pode atualizar)
+Exemplo de envio:
+```
+{
+	"status": "Pago"
+}
+```
+Exemplo de resposta:
+```
+{
+	"cabecalho": {
+		"status": 200,
+		"mensagem": "Produto atualizado com sucesso."
+	},
+	"retorno": {
+		"id": "19",
+		"cliente_id": "1",
+		"produto_id": "1",
+		"quantidade": 1,
+		"status": "Pago",
+		"criado_em": "2025-02-28 01:05:00",
+		"atualizado_em": "2025-02-28 01:05:10"
+	}
+}
+```
+  
+### **Excluir Pedido**: `DELETE /order/delete/{id}`
+  - Exclui um pedido específico. (Podendo excluir apenas pedidos que você mesmo criou).
+  - Sendo necessário o dado que vai atualizar no JSON, não precisando ser todos, sendo o: quantidade e/ou status
+```
+{
+	"cabecalho": {
+		"status": 200,
+		"mensagem": "Ordem deletado com sucesso."
+	},
+	"retorno": []
+}
+```
 ---
+Criado por Gustavo Gualda para teste técnico da L5 Networks.
