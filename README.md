@@ -6,8 +6,43 @@ Este projeto é uma API RESTful que gerencia clientes, produtos e pedidos. Ela f
 ## 🌐 Visão Geral
 
 A API permite a criação, leitura, atualização e exclusão (CRUD) de clientes, produtos e pedidos. Todas as rotas exigem autenticação via token JWT, exceto a rota de autenticação (`/client/auth`) e (`/client/create`). 
-O sistema conta também com validação de CPF e Email e em todos os campos, com uso de Validation em arquivos separados e nas Models. Havendo tratamento de erros em todas as rotas, sendo informado no JSON e no status da requisição
+O sistema conta também com validação de CPF e Email e em todos os campos, com uso de Validation em arquivos separados e nas Models. Havendo tratamento de erros em todas as rotas, sendo informado no JSON e no status da requisição.
 
+---
+## 📦 Instalação
+
+Siga os passos abaixo para configurar o projeto CodeIgniter 4.
+
+### ⚙️ Requisitos
+
+- **PHP >= 8.0**
+- **Composer** instalado
+
+### 🚀 Passo a Passo
+
+1. **Instale as dependências**
+   ```sh
+   composer install
+   ```
+
+3. **Copie o arquivo de ambiente**
+   ```sh
+  	cp env.example .env
+   ```
+
+4. **Configure o ambiente**
+   - Abra o arquivo `.env` e configure as variáveis conforme necessário, incluindo o banco de dados.
+
+
+5. **Crie o banco de dados e aplique as migrações** *(caso utilize banco de dados)*
+   ```sh
+   php spark migrate
+   ```
+
+6. **Inicie o servidor local**
+   ```sh
+   php spark serve
+   ```
 ---
 
 ## 🚀 Rotas da API
