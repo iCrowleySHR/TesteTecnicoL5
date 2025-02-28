@@ -13,12 +13,12 @@ class ProductResource
 
         return [
             'id'                => $product['id'] ?? null,
-            'client_id_creator' => $product['client_id_creator'] ?? null,
-            'price'             => $product['price'] ?? null,
-            'name'              => $product['name'] ?? null,
-            'description'       => $product['description'] ?? null,
-            'created_at'        => $product['created_at'] ?? date('Y-m-d H:i:s'),
-            'updated_at'        => $product['updated_at'] ?? date('Y-m-d H:i:s'),
+            'cliente_id_criador' => $product['client_id_creator'] ?? null,
+            'preco'             => $product['price'] ?? null,
+            'nome'              => $product['name'] ?? null,
+            'descricao'       => $product['description'] ?? null,
+            'criado_em'        => $product['created_at'] ?? date('Y-m-d H:i:s'),
+            'atualizado_em'        => $product['updated_at'] ?? date('Y-m-d H:i:s'),
         ];
     }
 
@@ -26,24 +26,24 @@ class ProductResource
     {
         if ($products instanceof Pager) {
             return [
-                'data' => array_map(fn($product) => self::toArray($product), $products->getData()),
-                'pagination' => [
-                    'current_page'  => $products->getCurrentPage(),
-                    'per_page'    => $products->getPerPage(),
+                'dados' => array_map(fn($product) => self::toArray($product), $products->getData()),
+                'paginacao' => [
+                    'pagina_atual'  => $products->getCurrentPage(),
+                    'por_pagina'    => $products->getPerPage(),
                     'total'         => $products->getTotal(),
-                    'last_page' => $products->getLastPage(),
+                    'ultima_pagina' => $products->getLastPage(),
                 ]
             ];
         }
 
         if (is_array($products)) {
             return [
-                'data' => array_map(fn($product) => self::toArray($product), $products),
-                'pagination' => [
-                    'current_page'  => 1, 
-                    'per_page'    => count($products),
+                'dados' => array_map(fn($product) => self::toArray($product), $products),
+                'paginacao' => [
+                    'pagina_atual'  => 1, 
+                    'por_pagina'    => count($products),
                     'total'         => count($products),
-                    'last_page' => 1,
+                    'ultima_pagina' => 1,
                 ]
             ];
         }

@@ -13,12 +13,12 @@ class OrderResource
 
         return [
             'id'         => $order['id'] ?? null,
-            'client_id'  => $order['client_id'] ?? null,
-            'product_id' => $order['product_id'] ?? null,
-            'quantity'   => (int) ($order['quantity'] ?? 0),
-            'status'     => $order['status'] ?? 'pending',
-            'created_at' => $order['created_at'] ?? date('Y-m-d H:i:s'),
-            'updated_at' => $order['updated_at'] ?? date('Y-m-d H:i:s'),
+            'cliente_id'  => $order['client_id'] ?? null,
+            'produto_id' => $order['product_id'] ?? null,
+            'quantidade'   => (int) ($order['quantity'] ?? 0),
+            'status'     => $order['status'] ?? 'não informado',
+            'criado_em' => $order['created_at'] ?? date('Y-m-d H:i:s'),
+            'atualizado_em' => $order['updated_at'] ?? date('Y-m-d H:i:s'),
         ];
     }
 
@@ -26,24 +26,24 @@ class OrderResource
     {
         if ($orders instanceof Pager) {
             return [
-                'data' => array_map(fn($order) => self::toArray($order), $orders->getData()),
-                'pagination' => [
-                    'current_page'  => $orders->getCurrentPage(),
-                    'per_page'    => $orders->getPerPage(),
+                'dados' => array_map(fn($order) => self::toArray($order), $orders->getData()),
+                'paginacao' => [
+                    'pagina_atual'  => $orders->getCurrentPage(),
+                    'por_pagina'    => $orders->getPerPage(),
                     'total'         => $orders->getTotal(),
-                    'last_page' => $orders->getLastPage(),
+                    'ultima_pagina' => $orders->getLastPage(),
                 ]
             ];
         }
 
         if (is_array($orders)) {
             return [
-                'data' => array_map(fn($order) => self::toArray($order), $orders),
-                'pagination' => [
-                    'current_page'  => 1, 
-                    'per_page'    => count($orders),
+                'dados' => array_map(fn($order) => self::toArray($order), $orders),
+                'paginacao' => [
+                    'pagina_atual'  => 1, 
+                    'por_pagina'    => count($orders),
                     'total'         => count($orders),
-                    'last_page' => 1,
+                    'ultima_pagina' => 1,
                 ]
             ];
         }

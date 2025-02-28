@@ -13,10 +13,10 @@ class ClientResource
         return [
             'id'         => $user['id'] ?? null,
             'cpf'        => $user['cpf'],
-            'name'       => $user['name'],
+            'nome'       => $user['name'],
             'email'      => $user['email'],
-            'created_at' => $user['created_at'] ?? date('Y-m-d H:i:s'),
-            'updated_at' => $user['updated_at'] ?? date('Y-m-d H:i:s'),
+            'criado_em' => $user['created_at'] ?? date('Y-m-d H:i:s'),
+            'atualizado_em' => $user['updated_at'] ?? date('Y-m-d H:i:s'),
         ];
     }
 

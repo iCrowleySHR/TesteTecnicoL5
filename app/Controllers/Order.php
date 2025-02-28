@@ -35,10 +35,10 @@ class Order extends BaseController
         }
     
         $filters = [
-            'client_id'         => $this->request->getGet('client_id'),
+            'client_id'         => $this->request->getGet('cliente_id'),
             'status'            => $this->request->getGet('status'),
-            'created_at'        => $this->request->getGet('created_at'),
-            'updated_at'        => $this->request->getGet('updated_at'),
+            'created_at'        => $this->request->getGet('criado_em'),
+            'updated_at'        => $this->request->getGet('atualizado_em'),
         ];
     
         $perPage = $this->request->getGet('por_pagina') ?? 10;

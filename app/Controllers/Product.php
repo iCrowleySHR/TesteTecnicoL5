@@ -31,12 +31,12 @@ class Product extends BaseController
         }
     
         $filters = [
-            'client_id_creator' => $this->request->getGet('client_id_creator'),
-            'price'             => $this->request->getGet('price'),
-            'name'              => $this->request->getGet('name'),
-            'description'       => $this->request->getGet('description'),
-            'created_at'        => $this->request->getGet('created_at'),
-            'updated_at'        => $this->request->getGet('updated_at'),
+            'client_id_creator' => $this->request->getGet('cliente_id_criador'),
+            'price'             => $this->request->getGet('preco'),
+            'name'              => $this->request->getGet('nome'),
+            'description'       => $this->request->getGet('descricao'),
+            'created_at'        => $this->request->getGet('criado_em'),
+            'updated_at'        => $this->request->getGet('atualizado_em'),
         ];
     
         $perPage = $this->request->getGet('por_pagina') ?? 10;
