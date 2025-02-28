@@ -22,31 +22,40 @@ class OrderResource
         ];
     }
 
-    public static function collection($orders): array
+    public static function collection($orders, $pager = null): array
     {
-        if ($orders instanceof Pager) {
+        if ($pager instanceof \CodeIgniter\Pager\Pager) {
             return [
-                'dados' => array_map(fn($order) => self::toArray($order), $orders->getData()),
+                'dados' => array_map(fn($order) => self::toArray($order), $orders),
                 'paginacao' => [
-                    'pagina_atual'  => $orders->getCurrentPage(),
-                    'por_pagina'    => $orders->getPerPage(),
-                    'total'         => $orders->getTotal(),
-                    'ultima_pagina' => $orders->getLastPage(),
+                    'pagina_atual'  => $pager->getCurrentPage(),
+                    'por_pagina'    => $pager->getPerPage(),
+                    'total'         => $pager->getTotal(),
+                    'ultima_pagina' => $pager->getPageCount(),
                 ]
             ];
         }
-
+    
         if (is_array($orders)) {
             return [
                 'dados' => array_map(fn($order) => self::toArray($order), $orders),
                 'paginacao' => [
-                    'pagina_atual'  => 1, 
+                    'pagina_atual'  => 1,
                     'por_pagina'    => count($orders),
                     'total'         => count($orders),
                     'ultima_pagina' => 1,
                 ]
             ];
         }
-
+    
+        return [
+            'dados' => [],
+            'paginacao' => [
+                'pagina_atual'  => 1,
+                'por_pagina'    => 0,
+                'total'         => 0,
+                'ultima_pagina' => 1,
+            ]
+        ];
     }
 }

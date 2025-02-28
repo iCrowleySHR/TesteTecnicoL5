@@ -45,13 +45,14 @@ class Order extends BaseController
         $page = $this->request->getGet('pagina') ?? 1;
     
         $query = $this->applyFilters($this->model, $filters);
-        $orders = $query->paginate($perPage, 'page', $page);
+        $orders = $query->paginate($perPage, 'default', $page);
+        $pager = $query->pager;
     
         if (empty($orders)) {
             return $this->respondWithFormat([], 404, "Nenhuma ordem encontrada para este cliente.");
         }
     
-        return $this->respondWithFormat(OrderResource::collection($orders), 200, "Ordens retornadas com sucesso.");
+        return $this->respondWithFormat(OrderResource::collection($orders, $pager), 200, "Ordens retornadas com sucesso.");
     }
 
     /**
