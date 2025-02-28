@@ -27,7 +27,7 @@ Siga os passos abaixo para configurar o projeto CodeIgniter 4.
 
 3. **Copie o arquivo de ambiente**
    ```sh
-  	cp .env.example .env
+  	cp env.example .env
    ```
 
 4. **Configure o ambiente**
